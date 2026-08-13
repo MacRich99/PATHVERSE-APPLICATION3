@@ -1,0 +1,6 @@
+{
+  "name": "PathVerse",
+  "description": "AI career discovery and Life GPS guide for young people exploring their future paths.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

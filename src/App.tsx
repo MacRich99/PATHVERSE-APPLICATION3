@@ -20,8 +20,8 @@ import { VerificationAssessmentModal } from './components/VerificationAssessment
 import { ProgressNotificationsDrawer } from './components/ProgressNotificationsDrawer';
 import { ArticleModal } from './components/ArticleModal';
 import { AiDiagnosticQuiz } from './components/AiDiagnosticQuiz';
-import { GeminiChat } from './components/GeminiChat';
 import { UserProfile, DiscoveryResult, DiscoveredPath, PathJourney, RecommendedProject, UserStageLevel, StepResource, LifeGpsStep, PathverseNotification } from './types';
+import { discoverPaths, generateLifeGps } from './services/geminiService';
 import { ALL_ACHIEVEMENTS } from './data/achievements';
 import { generateResourcesForStep } from './data/stepResources';
 import { WifiOff, Wifi } from 'lucide-react';
@@ -52,9 +52,9 @@ export default function App() {
     return 'welcome';
   });
 
-  const [activeTab, setActiveTab] = useState<'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts' | 'geminiChat'>(() => {
+  const [activeTab, setActiveTab] = useState<'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts'>(() => {
     const savedTab = localStorage.getItem('pathverse_activetab');
-    if (savedTab && ['home', 'discovery', 'lifeGps', 'community', 'contacts', 'geminiChat'].includes(savedTab)) {
+    if (savedTab && ['home', 'discovery', 'lifeGps', 'community', 'contacts'].includes(savedTab)) {
       return savedTab as any;
     }
     return 'home';
@@ -488,13 +488,7 @@ export default function App() {
     setIsDiscovering(true);
 
     try {
-      const response = await fetch('/api/gemini/discover', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: targetProfile }),
-      });
-
-      const data = await response.json();
+      const data = await discoverPaths(targetProfile);
       setDiscoveryResult(data);
       localStorage.setItem('pathverse_discovery', JSON.stringify(data));
       setActiveTab('discovery');
@@ -532,17 +526,7 @@ export default function App() {
     setActiveTab('lifeGps');
 
     try {
-      const response = await fetch('/api/gemini/life-gps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pathTitle: pathItem.title,
-          pathReason: pathItem.reason,
-          profile: user,
-        }),
-      });
-
-      const data = await response.json();
+      const data = await generateLifeGps(pathItem.title, pathItem.reason, user);
       setActiveJourney({
         pathId: pathItem.id,
         pathTitle: pathItem.title,
@@ -824,12 +808,6 @@ export default function App() {
 
             {activeTab === 'contacts' && (
               <ContactsScreen user={user} />
-            )}
-
-            {activeTab === 'geminiChat' && (
-              <div className="px-4 py-2">
-                <GeminiChat />
-              </div>
             )}
           </>
         )}

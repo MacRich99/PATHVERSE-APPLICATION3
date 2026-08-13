@@ -63,11 +63,14 @@ export const GeminiMentorDrawer: React.FC<GeminiMentorDrawerProps> = ({
         text: m.text,
       }));
 
-      const res = await fetch('/api/gemini', {
+      const res = await fetch('/api/gemini/mentor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: query,
+          message: query,
+          conversationHistory: historyPayload,
+          profile: user,
+          currentPath: currentPathTitle,
         }),
       });
 
@@ -75,7 +78,7 @@ export const GeminiMentorDrawer: React.FC<GeminiMentorDrawerProps> = ({
       const mentorMsg: Message = {
         id: `msg-${Date.now() + 1}`,
         sender: 'mentor',
-        text: data.text || data.reply || "I'm here to help guide your career exploration. What skill would you like to build next?",
+        text: data.reply || "I'm here to help guide your career exploration. What skill would you like to build next?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 

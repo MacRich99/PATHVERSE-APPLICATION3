@@ -17,8 +17,8 @@ import { UserProfile } from '../types';
 
 interface SidebarProps {
   user: UserProfile;
-  activeTab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts' | 'geminiChat';
-  setActiveTab: (tab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts' | 'geminiChat') => void;
+  activeTab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts';
+  setActiveTab: (tab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts') => void;
   onOpenRevenueReport: () => void;
   onOpenProfile: () => void;
   onOpenMentor: () => void;
@@ -64,12 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Google Contacts',
       icon: BookUser,
       description: 'Mentors & Network',
-    },
-    {
-      id: 'geminiChat' as const,
-      label: 'Gemini AI Assistant',
-      icon: Sparkles,
-      description: 'Amplify Gen 2 Backend Route',
     },
   ];
 

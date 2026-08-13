@@ -4,8 +4,8 @@ import { UserProfile } from '../types';
 
 interface HeaderProps {
   user: UserProfile | null;
-  activeTab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts' | 'geminiChat';
-  setActiveTab: (tab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts' | 'geminiChat') => void;
+  activeTab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts';
+  setActiveTab: (tab: 'home' | 'discovery' | 'lifeGps' | 'community' | 'contacts') => void;
   onOpenRevenueReport: () => void;
   onOpenProfile: () => void;
   onOpenMentor?: () => void;
@@ -61,7 +61,6 @@ export const Header: React.FC<HeaderProps> = ({
                 {activeTab === 'lifeGps' && 'Life GPS Route Navigator'}
                 {activeTab === 'community' && 'Global Learner Network'}
                 {activeTab === 'contacts' && 'Google Contacts Network'}
-                {activeTab === 'geminiChat' && 'Gemini 1.5 Flash Assistant'}
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#1C1F37] border border-white/10 text-[#F2AF29]">
                 Stress-Free Learning
@@ -73,7 +72,6 @@ export const Header: React.FC<HeaderProps> = ({
               {activeTab === 'lifeGps' && 'Navigate step-by-step milestones to achieve your long-term career goals.'}
               {activeTab === 'community' && 'Connect, share achievements, and collaborate with learners across all fields of study.'}
               {activeTab === 'contacts' && 'Sync, manage, and invite your personal Google Contacts to build your study mentor network.'}
-              {activeTab === 'geminiChat' && 'Chat directly with Gemini 1.5 Flash via your AWS Amplify Gen 2 backend function route.'}
             </p>
           </div>
 

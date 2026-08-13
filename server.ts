@@ -1,73 +1,23 @@
 import express from 'express';
 import path from 'path';
 import { GoogleGenAI, Type } from '@google/genai';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import Stripe from 'stripe';
 
 const app = express();
 const PORT = 3000;
 
-// Enable CORS for frontend requests
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-/**
- * Backend API Route: POST /api/gemini
- * Receives { prompt: string }
- * Calls Gemini API securely using process.env.GEMINI_API_KEY
- * Returns { text: string }
- */
-app.post('/api/gemini', async (req, res) => {
-  try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({
-        error: 'GEMINI_API_KEY environment variable is not configured on the server.',
-      });
-    }
-
-    const { prompt } = req.body || {};
-    if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
-      return res.status(400).json({
-        error: 'Prompt string is required in request body: { prompt: "your message" }',
-      });
-    }
-
-    // Call official @google/generative-ai SDK with gemini-1.5-flash
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-    const result = await model.generateContent(prompt.trim());
-    const response = await result.response;
-    const text = response.text();
-
-    return res.json({ text });
-  } catch (err: any) {
-    console.error('Error handling /api/gemini:', err);
-    return res.status(500).json({
-      error: err?.message || 'An error occurred while generating response from Gemini API.',
-    });
-  }
-});
 
 // Initialize Gemini Client
 let aiClient: GoogleGenAI | null = null;
 
 function getGeminiClient(): GoogleGenAI | null {
-  if (!aiClient && process.env.GEMINI_API_KEY) {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+  if (!aiClient && apiKey) {
     try {
       aiClient = new GoogleGenAI({
-        apiKey: process.env.GEMINI_API_KEY,
+        apiKey,
         httpOptions: {
           headers: {
             'User-Agent': 'aistudio-build',

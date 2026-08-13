@@ -1,23 +1,8 @@
-# Dependencies
 node_modules/
-.pnpm-store/
-
-# Build & Output
 build/
 dist/
 coverage/
 .DS_Store
 *.log
-
-# Environment files
-.env
-.env.local
-.env.production
-.env.development
-.env*.local
+.env*
 !.env.example
-
-# AWS Amplify generated files
-.amplify/
-amplifyconfiguration.json
-amplify_outputs.json
